@@ -1,6 +1,9 @@
 import fs from 'node:fs/promises'
 import express from 'express'
 import { OpenAIApi, Configuration } from 'openai';
+import bodyParser from 'body-parser';
+import dotenv from 'dotenv';
+dotenv.config();
 
 const configuration = new Configuration({
   organization: "org-OcpugI3unh7ZeCGJ7nI4bflg",
@@ -40,6 +43,7 @@ if (!isProduction) {
   app.use(compression())
   app.use(base, sirv('./dist/client', { extensions: [] }))
 }
+app.use(bodyParser.json());
 
 // Serve HTML
 app.get('/', async (req, res) => {
@@ -73,20 +77,21 @@ app.get('/', async (req, res) => {
 })
 
 app.post('/openai', async (req, res) => {
-  console.log(req.body);
-    // const request = await openai.createCompletion({
-    //   model: "text-ada-001",
-    //   prompt: `${value}`,
-    //   max_tokens: 100,
-    //   temperature: 0,
-    // });
-    // if (request.data.choices[0].text) {
-    //   (request.data.choices[0].text);
-    // }
-    // else {
-    //       setResul("No response");
-    //     }
-  res.status(200).json({ message: 'Data received and processed successfully' });
+    const query = req.body.input
+    let response = "";
+    const request = await openai.createCompletion({
+      model: "text-ada-001",
+      prompt: query,
+      max_tokens: 100,
+      temperature: 0,
+    });
+    if (request.data.choices[0].text) {
+      response = request.data.choices[0].text;
+    }
+    else {
+          response="No response";
+        }
+  res.status(200).json({ message: response });
 });
 // Start http server
 app.listen(port, () => {

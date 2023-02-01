@@ -9,10 +9,8 @@ function App() {
     setInput(e.target.value);
   };
 
-  //function to get response from /api/data
-
-  const idk = async (input) => {
-    fetch('http://localhost:3000/openai', {
+  const sendOpenAI = async (input) => {
+    fetch('/openai', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -21,26 +19,24 @@ function App() {
         })
         .then(response => response.json())
         .then(data => {
-          console.log(data);
+          setResult(data.message);
         }
         );
   };
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    idk(input);
+  const handleSubmit = () => {
+    sendOpenAI(input);
   };
 
   return (
     <div className="main">
       <h1 className='heading'>OpenAI Chat Bot</h1>
-      <form className='input-group' onSubmit={handleSubmit}>
+      <div className='input-group'>
         <input className='input-field' placeholder='Enter Your Input' type="text" value={input} onChange={handleInput} />
-        <button className='submit' type="submit">Submit</button>
-      </form>
-      <button onClick={() => idk(input)}>holl</button>
-      <p className='result'>
+        <button className='submit' onClick={()=>handleSubmit()}>Submit</button>
+      </div>
+      <div className='result'>
         {result}
-      </p>
+      </div>
     </div>
   );
 }
