@@ -1,5 +1,5 @@
 {
     "language_id": "node",
     "path": ".",
-    "scripts": [ "dist/client" ]
+    "scripts": [ "server.js" ]
 }
