@@ -4,6 +4,7 @@ import { OpenAIApi, Configuration } from 'openai';
 import bodyParser from 'body-parser';
 import dotenv from 'dotenv';
 dotenv.config();
+import cors from 'cors';
 
 const configuration = new Configuration({
   organization: "org-OcpugI3unh7ZeCGJ7nI4bflg",
@@ -44,6 +45,7 @@ if (!isProduction) {
   app.use(base, sirv('./dist/client', { extensions: [] }))
 }
 app.use(bodyParser.json());
+app.use(cors({origin: `http://localhost:${port}`}));
 
 // Serve HTML
 app.get('/', async (req, res) => {
